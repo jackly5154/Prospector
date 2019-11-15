@@ -20,7 +20,7 @@ public class Card : MonoBehaviour {
 		get {
 			return (!back.activeSelf);
 		}
-
+        f
 		set {
 			back.SetActive(!value);
 		}
