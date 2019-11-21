@@ -28,7 +28,7 @@ public class Deck : MonoBehaviour
     [Header("Set Dynamically")]
 
     public PT_XMLReader xmlr;
-    // add from p 569
+
     public List<string> cardNames;
     public List<Card> cards;
     public List<Decorator> decorators;
@@ -37,10 +37,10 @@ public class Deck : MonoBehaviour
     public Dictionary<string, Sprite> dictSuits;
 
 
-    // called by Prospector when it is ready
+
     public void InitDeck(string deckXMLText)
     {
-        // from page 576
+
         if (GameObject.Find("_Deck") == null)
         {
             GameObject anchorGO = new GameObject("_Deck");
@@ -54,10 +54,6 @@ public class Deck : MonoBehaviour
             {"H", suitHeart},
             {"S", suitSpade}
         };
-
-
-
-        // -------- end from page 576
         ReadDeck(deckXMLText);
         MakeCards();
     }
@@ -69,7 +65,7 @@ public class Deck : MonoBehaviour
         xmlr = new PT_XMLReader();
         xmlr.Parse(deckXMLText);
 
-        // print a test line
+
         string s = "xml[0] decorator [0] ";
         s += "type=" + xmlr.xml["xml"][0]["decorator"][0].att("type");
         s += " x=" + xmlr.xml["xml"][0]["decorator"][0].att("x");
@@ -78,9 +74,9 @@ public class Deck : MonoBehaviour
         print(s);
 
         //Read decorators for all cards
-        // these are the small numbers/suits in the corners
+
         decorators = new List<Decorator>();
-        // grab all decorators from the XML file
+
         PT_XMLHashList xDecos = xmlr.xml["xml"][0]["decorator"];
         Decorator deco;
         for (int i = 0; i < xDecos.Count; i++)
@@ -88,7 +84,7 @@ public class Deck : MonoBehaviour
             // for each decorator in the XML, copy attributes and set up location and flip if needed
             deco = new Decorator();
             deco.type = xDecos[i].att("type");
-            deco.flip = (xDecos[i].att("flip") == "1");   // too cute by half - if it's 1, set to 1, else set to 0
+            deco.flip = (xDecos[i].att("flip") == "1");
             deco.scale = float.Parse(xDecos[i].att("scale"));
             deco.loc.x = float.Parse(xDecos[i].att("x"));
             deco.loc.y = float.Parse(xDecos[i].att("y"));
@@ -96,8 +92,7 @@ public class Deck : MonoBehaviour
             decorators.Add(deco);
         }
 
-        // read pip locations for each card rank
-        // read the card definitions, parse attribute values for pips
+
         cardDefs = new List<CardDefinition>();
         PT_XMLHashList xCardDefs = xmlr.xml["xml"][0]["card"];
 
@@ -124,11 +119,8 @@ public class Deck : MonoBehaviour
                         deco.scale = float.Parse(xPips[j].att("scale"));
                     }
                     cDef.pips.Add(deco);
-                } // for j
-            }// if xPips
-
-            // if it's a face card, map the proper sprite
-            // foramt is ##A, where ## in 11, 12, 13 and A is letter indicating suit
+                } 
+            }
             if (xCardDefs[i].HasAtt("face"))
             {
                 cDef.face = xCardDefs[i].att("face");
@@ -145,14 +137,13 @@ public class Deck : MonoBehaviour
             {
                 return (cd);
             }
-        } // foreach
+        }
         return (null);
-    }//GetCardDefinitionByRank
+    }
 
 
     public void MakeCards()
     {
-        // stub Add the code from page 577 here
         cardNames = new List<string>();
         string[] letters = new string[] { "C", "D", "H", "S" };
         foreach (string s in letters)
@@ -165,11 +156,9 @@ public class Deck : MonoBehaviour
 
         // list of all Cards
         cards = new List<Card>();
-
-        // temp variables
         Sprite tS = null;
         GameObject tGO = null;
-        SpriteRenderer tSR = null;  // so tempted to make a D&D ref here...
+        SpriteRenderer tSR = null;
 
         for (int i = 0; i < cardNames.Count; i++)
         {
@@ -201,15 +190,15 @@ public class Deck : MonoBehaviour
                     tSR.sprite = dictSuits[card.suit];
                 }
                 else
-                { // it is a rank
+                {
                     tS = rankSprites[card.rank];
                     tSR.sprite = tS;
                     tSR.color = card.color;
                 }
 
-                tSR.sortingOrder = 1;                     // make it render above card
-                tGO.transform.parent = cgo.transform;     // make deco a child of card GO
-                tGO.transform.localPosition = deco.loc;   // set the deco's local position
+                tSR.sortingOrder = 1;
+                tGO.transform.parent = cgo.transform;  
+                tGO.transform.localPosition = deco.loc;  
 
                 if (deco.flip)
                 {
@@ -224,7 +213,7 @@ public class Deck : MonoBehaviour
                 tGO.name = deco.type;
 
                 card.decoGOs.Add(tGO);
-            } // foreach Deco
+            }
 
 
             //Add the pips
@@ -251,7 +240,7 @@ public class Deck : MonoBehaviour
                 card.pipGOs.Add(tGO);
             }
 
-            //Handle face cards
+
             if (card.def.face != "")
             {
                 tGO = Instantiate(prefabSprite) as GameObject;
@@ -276,8 +265,8 @@ public class Deck : MonoBehaviour
             card.faceUp = false;
 
             cards.Add(card);
-        } // for all the Cardnames	
-    } // makeCards
+        }
+    }
 
     //Find the proper face card
     public Sprite GetFace(string faceS)
@@ -288,19 +277,18 @@ public class Deck : MonoBehaviour
             {
                 return (tS);
             }
-        }//foreach	
-        return (null);  // couldn't find the sprite (should never reach this line)
-    }// getFace 
+        }
+        return (null);
+    }
 
     static public void Shuffle(ref List<Card> oCards)
     {
         List<Card> tCards = new List<Card>();
 
-        int ndx;   // which card to move
+        int ndx;
 
         while (oCards.Count > 0)
         {
-            // find a random card, add it to shuffled list and remove from original deck
             ndx = Random.Range(0, oCards.Count);
             tCards.Add(oCards[ndx]);
             oCards.RemoveAt(ndx);
@@ -308,9 +296,8 @@ public class Deck : MonoBehaviour
 
         oCards = tCards;
 
-        //because oCards is a ref parameter, the changes made are propogated back
-        //for ref paramters changes made in the function persist.
-
 
     }
+
+
 }
