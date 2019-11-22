@@ -128,6 +128,7 @@ public class Prospector : MonoBehaviour
             cp.layoutID = tSD.id;
             cp.slotDef = tSD;
             cp.state = eCardState.tableau;
+           // cp.SetSortOrder(0);
             cp.SetSortingLayerName(tSD.layerName);
 
             tableau.Add(cp);
@@ -307,8 +308,8 @@ public class Prospector : MonoBehaviour
             FloatingScoreHandler(eScoreEvent.gameLoss);
         }
             Invoke("ReloadLevel", reloadDelay);
-        }
-        void ReloadLevel{
+    }
+        void ReloadLevel(){
             SceneManager.LoadScene("_Prospector_Scene_0");
         }
 

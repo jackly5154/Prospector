@@ -250,7 +250,7 @@ public class Deck : MonoBehaviour
                 tSR.sprite = tS;
                 tSR.sortingOrder = 1;
                 tGO.transform.parent = card.transform;
-                tGO.transform.localPosition = Vector3.zero;  // slap it smack dab in the middle
+                tGO.transform.localPosition = Vector3.zero; 
                 tGO.name = "face";
             }
 
